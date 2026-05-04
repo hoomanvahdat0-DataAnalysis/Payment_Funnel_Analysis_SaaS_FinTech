@@ -37,3 +37,6 @@ EDA shows
 ![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/image3.png)
 
 ## Next Steps:
+Dig deeper into the error breakdown to identify which issues occur most frequently, distinguishing between user-related errors and those originating from the vendor.
+
+Examine why many subscriptions never initiate the payment process. Determine whether this is due to internal process gaps or if customers are simply forgetting to complete the payment step.
