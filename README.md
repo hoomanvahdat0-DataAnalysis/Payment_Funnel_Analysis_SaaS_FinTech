@@ -32,8 +32,8 @@ EDA shows
 
 3. Collaborate with the product manager to increase the number of subscriptions that actually reach and engage with the payment portal. Since many users drop off before even attempting payment, this represents a significant loss early in the funnel. Consider strategies like payment reminders or outreach from customer service agents to encourage completion.
 
-![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Subscription-Cancelation-Analysis/blob/main/graph1.png)
-![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Subscription-Cancelation-Analysis/blob/main/graph2.png)
-![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Subscription-Cancelation-Analysis/blob/main/graph3.png)
+![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/image1.png)
+![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/image2.png)
+![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/image3.png)
 
 ## Next Steps:
