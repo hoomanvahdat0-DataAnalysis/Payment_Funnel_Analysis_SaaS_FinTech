@@ -7,6 +7,7 @@ A significant number of subscriptions remain unpaid which indicates potential fr
 The finance team has noticed that many subscriptions haven't been paid for, so they've reached out to the product team to understand if there are any frictions points in the online payment portal so they can increase the conversion rate (% of subscriptions that are successfully converting to a paid subscription).
 
 ![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/data%20model.png)
+![Data Model](https://github.com/hoomanvahdat0-DataAnalysis/Payment_Funnel_Analysis_SaaS_FinTech/blob/main/payment%20funnel%20stages.png)
 
 ## Methodology:
 1. EDA  Exploratory Data Analysis
