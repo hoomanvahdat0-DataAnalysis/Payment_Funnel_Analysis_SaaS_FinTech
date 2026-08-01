@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order Funnel Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1120;
+    --surface:#141B2D;
+    --surface-2:#1C2740;
+    --border:#26314A;
+    --text:#E8EDF7;
+    --muted:#8792A8;
+    --teal:#3DDC97;
+    --teal-dim:#1F6E4E;
+    --coral:#F2545B;
+    --coral-dim:#5C2226;
+    --blue:#5B8DEF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    padding:32px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+  h1{font-size:22px;font-weight:700;margin:0 0 4px 0;letter-spacing:-0.01em;}
+  .subtitle{color:var(--muted);font-size:13.5px;margin:0;}
+  .badge{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-size:11.5px;
+    padding:6px 12px;
+    border-radius:100px;
+    white-space:nowrap;
+  }
+  .badge b{color:var(--coral);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .kpi{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .kpi .label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+  .kpi .value{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;}
+  .kpi .value.warn{color:var(--coral);}
+  .kpi .value.good{color:var(--teal);}
+  .kpi .sub{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px;}
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px;
+  }
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 18px 0;font-weight:600;}
+
+  /* funnel */
+  .funnel-row{display:grid;grid-template-columns:150px 1fr 130px;align-items:center;gap:12px;margin-bottom:10px;}
+  .funnel-label{font-size:12.5px;color:var(--text);text-align:right;}
+  .funnel-bar-track{position:relative;height:30px;}
+  .funnel-bar{
+    height:100%;
+    background:linear-gradient(90deg,var(--teal-dim),var(--teal));
+    border-radius:4px;
+    display:flex;align-items:center;
+    transition:width .6s ease;
+  }
+  .funnel-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
+  .funnel-meta b{color:var(--text);}
+
+  /* dropoff */
+  .drop-row{display:grid;grid-template-columns:1fr 60px;align-items:center;gap:10px;margin-bottom:14px;}
+  .drop-label{font-size:12px;color:var(--muted);}
+  .drop-track{background:var(--surface-2);border-radius:4px;height:10px;overflow:hidden;margin-top:6px;}
+  .drop-fill{height:100%;border-radius:4px;}
+  .drop-pct{font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:right;font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:10px 10px;border-bottom:1px solid var(--border);}
+  td.num{font-family:'IBM Plex Mono',monospace;}
+  tr:last-child td{border-bottom:none;}
+  .stage-pill{display:inline-block;padding:2px 9px;border-radius:100px;font-size:11px;font-family:'IBM Plex Mono',monospace;}
+  .stage-error{background:var(--coral-dim);color:#FFB4B8;}
+  .stage-progress{background:#3A2E14;color:#F2C879;}
+
+  .reason-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .reason-label{width:150px;font-size:12.5px;color:var(--text);flex-shrink:0;}
+  .reason-track{flex:1;background:var(--surface-2);border-radius:4px;height:14px;overflow:hidden;}
+  .reason-fill{height:100%;background:linear-gradient(90deg,#3B5A8A,var(--blue));border-radius:4px;}
+  .reason-count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);width:26px;text-align:right;}
+
+  footer{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.6;padding:16px 4px 4px 4px;}
+  code{background:var(--surface-2);padding:1px 6px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
+
+  @media (max-width:820px){
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .grid2{grid-template-columns:1fr;}
+    .funnel-row{grid-template-columns:100px 1fr 90px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Order Conversion Funnel</h1>
+      <p class="subtitle">Payment widget → completed order, 1,000-order synthetic sample</p>
+    </div>
+    <div class="badge">Synthetic dataset: <b>1,000</b> subscriptions, full event-log coverage</div>
+  </header>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Orders Started</div>
+      <div class="value" id="kpi-started">–</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Completed Orders</div>
+      <div class="value good" id="kpi-completed">–</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Overall Conversion</div>
+      <div class="value" id="kpi-conv">–</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Revenue Tied Up (Stalled)</div>
+      <div class="value warn" id="kpi-stalled">–</div>
+      <div class="sub">655 orders stuck mid-funnel</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Funnel — Orders Reaching Each Stage</h2>
+      <div id="funnel"></div>
+    </div>
+    <div class="card">
+      <h2>Where Orders Fall Out</h2>
+      <div id="dropoff"></div>
+    </div>
+  </div>
+
+  <div class="grid2" style="grid-template-columns:1.3fr 1fr;">
+    <div class="card">
+      <h2>Revenue At Risk — By Stalled Stage</h2>
+      <table>
+        <thead><tr><th>Stage</th><th style="text-align:right">Orders</th><th style="text-align:right">Revenue at Risk</th></tr></thead>
+        <tbody id="stalled-body"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Post-Purchase Cancelation Reasons</h2>
+      <div id="reasons"></div>
+    </div>
+  </div>
+
+  <footer>
+    All figures on this page are real output from <code>funnel_extraction_1000.sql</code>
+    run against a 1,000-row <b>synthetic</b> dataset generated to match the conversion
+    and cancelation patterns observed in the original sample (not real customer records).
+    To point this at live data: replace the arrays inside the <code>&lt;script&gt;</code>
+    tag at the bottom of this file with your current Snowflake query results —
+    everything on the page recalculates from those arrays automatically.
+  </footer>
+
+</div>
+
+<script>
+// ---- DATA: real output from funnel_extraction_1000.sql against the 1000-row synthetic dataset ----
+const stageCounts = [
+  {stage: "PaymentWidgetOpened", count: 1000},
+  {stage: "PaymentEntered",      count: 673},
+  {stage: "PaymentSubmitted",    count: 586},
+  {stage: "PaymentSuccess",      count: 496},
+  {stage: "Complete",            count: 345},
+];
+
+// revenue at risk grouped by the stage each stalled order is stuck at
+const stalledByStage = [
+  {stage: "PaymentWidgetOpened", orders: 313, revenue: 2592700},
+  {stage: "PaymentSuccess",      orders: 147, revenue: 1215300},
+  {stage: "PaymentSubmitted",    orders: 87,  revenue: 719500},
+  {stage: "PaymentEntered",      orders: 84,  revenue: 675900},
+  {stage: "Error",               orders: 37,  revenue: 276200},
+];
+
+const cancelReasons = [
+  {reason: "Not useful", count: 48},
+  {reason: "Expensive", count: 44},
+  {reason: "Went to a competitor", count: 33},
+];
+
+const totalStalledRevenue = stalledByStage.reduce((a,b)=>a+b.revenue, 0);
+
+// ---- RENDER: funnel ----
+const funnelEl = document.getElementById('funnel');
+const startCount = stageCounts[0].count;
+stageCounts.forEach((s, i) => {
+  const pct = s.count / startCount;
+  const stepPct = i === 0 ? null : s.count / stageCounts[i-1].count;
+  const row = document.createElement('div');
+  row.className = 'funnel-row';
+  row.innerHTML = `
+    <div class="funnel-label">${s.stage}</div>
+    <div class="funnel-bar-track"><div class="funnel-bar" style="width:${(pct*100).toFixed(1)}%"></div></div>
+    <div class="funnel-meta"><b>${s.count}</b> ${stepPct !== null ? `(${(stepPct*100).toFixed(0)}%)` : ''}</div>
+  `;
+  funnelEl.appendChild(row);
+});
+
+// ---- RENDER: dropoff ----
+const dropoffEl = document.getElementById('dropoff');
+const dropoffs = [];
+for (let i = 1; i < stageCounts.length; i++) {
+  const lost = stageCounts[i-1].count - stageCounts[i].count;
+  const pct = lost / stageCounts[i-1].count;
+  dropoffs.push({label: `${stageCounts[i-1].stage} → ${stageCounts[i].stage}`, pct});
+}
+const maxDrop = Math.max(...dropoffs.map(d => d.pct));
+dropoffs.forEach(d => {
+  const isWorst = d.pct === maxDrop;
+  const row = document.createElement('div');
+  row.className = 'drop-row';
+  row.innerHTML = `
+    <div>
+      <div class="drop-label">${d.label}</div>
+      <div class="drop-track"><div class="drop-fill" style="width:${(d.pct*100).toFixed(1)}%; background:${isWorst ? 'var(--coral)' : 'var(--blue)'}"></div></div>
+    </div>
+    <div class="drop-pct" style="color:${isWorst ? 'var(--coral)' : 'var(--text)'}">${(d.pct*100).toFixed(1)}%</div>
+  `;
+  dropoffEl.appendChild(row);
+});
+
+// ---- RENDER: KPIs ----
+const completed = stageCounts[stageCounts.length-1].count;
+document.getElementById('kpi-started').textContent = startCount;
+document.getElementById('kpi-completed').textContent = completed;
+document.getElementById('kpi-conv').textContent = ((completed/startCount)*100).toFixed(1) + '%';
+document.getElementById('kpi-stalled').textContent = '$' + totalStalledRevenue.toLocaleString();
+
+// ---- RENDER: stalled-by-stage table ----
+const tbody = document.getElementById('stalled-body');
+stalledByStage.forEach(o => {
+  const tr = document.createElement('tr');
+  const pillClass = o.stage === 'Error' ? 'stage-error' : 'stage-progress';
+  tr.innerHTML = `
+    <td><span class="stage-pill ${pillClass}">${o.stage}</span></td>
+    <td class="num" style="text-align:right">${o.orders}</td>
+    <td class="num" style="text-align:right">$${o.revenue.toLocaleString()}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ---- RENDER: cancel reasons ----
+const reasonsEl = document.getElementById('reasons');
+const maxReason = Math.max(...cancelReasons.map(r=>r.count));
+cancelReasons.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'reason-row';
+  row.innerHTML = `
+    <div class="reason-label">${r.reason}</div>
+    <div class="reason-track"><div class="reason-fill" style="width:${(r.count/maxReason*100)}%"></div></div>
+    <div class="reason-count">${r.count}</div>
+  `;
+  reasonsEl.appendChild(row);
+});
+</script>
+</body>
+</html>
